@@ -60,7 +60,8 @@ public class MetroDAO {
 				Fermata a= new Fermata(rs.getInt("id1"),rs.getString("nome1"), new LatLng(rs.getDouble("x1"), rs.getDouble("y1")));
 				Fermata b= new Fermata(rs.getInt("id2"),rs.getString("nome2"), new LatLng(rs.getDouble("x2"), rs.getDouble("y2")));
 				Linea c=new Linea(rs.getInt("l1.id_linea"), rs.getString("l1.nome"),rs.getDouble("l1.velocita"));
-				FermateAdiacenti temp= new FermateAdiacenti(a,b,c);
+				FermateAdiacenti temp= new FermateAdiacenti(a,b);
+				temp.setL1(c);
 				list.add(temp);
 			}
 

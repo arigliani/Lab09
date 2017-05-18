@@ -8,13 +8,16 @@ public class TestModel {
 	public static void main(String[] args) {
 		
 		Model model = new Model();
-		System.out.println(""+model.getFermate());
-		System.out.println(""+model.getGraph());
+		System.out.println("tutte fermate"+model.getFermate());
+		
+		System.out.println("grafo "+model.getGraph());
+		
 		
 		List<Fermata> list= model.getFermate();
+		System.out.println(list.get(0)+" "+list.get(4));
 		
-		
-		model.getPercorso(list.get(0),list.get(4));
+		System.out.println();
+		System.out.println(""+model.ritornaPercorso(list.get(0),list.get(4)));
 	}
 
 }

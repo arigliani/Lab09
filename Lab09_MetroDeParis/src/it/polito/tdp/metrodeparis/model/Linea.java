@@ -28,7 +28,7 @@ public void setNome(String nome) {
 public double getVelocita() {
 	return velocita;
 }
-public void setVelocita(int velocita) {
+public void setVelocita(double velocita) {
 	this.velocita = velocita;
 }
 @Override

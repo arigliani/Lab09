@@ -18,7 +18,7 @@ import it.polito.tdp.metrodeparis.dao.MetroDAO;
 
 
 public class Model {
-	private WeightedMultigraph<Fermata, DefaultWeightedEdge> graph;
+	private WeightedMultigraph<Fermata, FermateAdiacenti> graph;
 	private List<Fermata> fermate;
 	private MetroDAO dao= new MetroDAO();
 	
@@ -33,42 +33,72 @@ public class Model {
 	}
 
 
-	public WeightedMultigraph<Fermata, DefaultWeightedEdge> getGraph() {
+	public WeightedMultigraph<Fermata, FermateAdiacenti> getGraph() {
 		
 			this.creaGrafo();
 		
 		return this.graph;
 	}
-	
-	
-	public List<Fermata> getPercorso(Fermata a, Fermata b){
-		DijkstraShortestPath<Fermata, DefaultWeightedEdge> percorso= new DijkstraShortestPath<Fermata, DefaultWeightedEdge>(graph,a,b);
-		List<DefaultWeightedEdge> listaMinomo= percorso.getPathEdgeList(); //ritorna una lista di archi
-		for(DefaultWeightedEdge e: listaMinomo){
-			g
+	public String ritornaPercorso(Fermata a, Fermata b){
+		List<FermateAdiacenti> listaMinimo=this.getPercorso(a, b);
+		Linea d=listaMinimo.get(0).getL1();
+		String fine="prendo linea: "+d.getNome()+"\n";
+		for(FermateAdiacenti c: listaMinimo){
+			if(!c.getL1().equals(d)){
+				fine+="\n"+"cambio linea "+c.getL1().getNome()+"\n";
+				d.setNome(c.getL1().getNome());
+				d.setId(c.getL1().getId());
+				d.setVelocita(c.getL1().getVelocita());				
+			}else{
+				d.setNome(c.getL1().getNome());
+				d.setId(c.getL1().getId());
+				d.setVelocita(c.getL1().getVelocita());					
+			}
+			fine+="P: "+c.getF1().getNome()+ " A: "+c.getF2().getNome()+"\n";
+			
 		}
-		if(listaMinomo==null){
-			System.out.println("non esiste");
+		double var=0;
+		
+		for(FermateAdiacenti c: listaMinimo){
+			var+= c.getPercorrenza();
+		}
+	   fine+="\n"+var+" minuti";
+		
+		return fine.trim();
+	}
+	
+	private List<FermateAdiacenti> getPercorso(Fermata a, Fermata b){
+		    this.creaGrafo();
+		
+		
+		DijkstraShortestPath<Fermata, FermateAdiacenti> percorso= new DijkstraShortestPath<Fermata, FermateAdiacenti>(graph,a,b);
+		List<FermateAdiacenti> listaMinimo= percorso.getPathEdgeList(); //ritorna una lista di archi
+		
+		if(listaMinimo==null){
+			return null;
 		}else{
-			System.out.println(percorso.toString());
+			return listaMinimo;
 
 		}
-		
-		return null;
 	}
 
 
 	private void creaGrafo() {
-		this.graph= new WeightedMultigraph<Fermata, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+		this.graph= new WeightedMultigraph<Fermata, FermateAdiacenti>(FermateAdiacenti.class);
 		Graphs.addAllVertices( graph, this.getFermate());
-		 DefaultWeightedEdge e;
+		
+		
+		//Graphs.addEdgeWithVertices(g, sourceVertex, targetVertex, weight)
 		for(FermateAdiacenti fa: dao.listStazioniAdiacenti()){	
 		
 		  double tempo= calcolaTempo(fa);
-		
-		  e=graph.addEdge(fa.getF1(), fa.getF2());
+		  FermateAdiacenti e= new FermateAdiacenti(fa.getF1(), fa.getF2());
+		  graph.addEdge(fa.getF1(), fa.getF2(), e);
 		   
 			graph.setEdgeWeight(e,tempo);
+			
+			e.setL1(fa.getL1());
+			e.setPercorrenza(tempo);
 			
 		}
 		

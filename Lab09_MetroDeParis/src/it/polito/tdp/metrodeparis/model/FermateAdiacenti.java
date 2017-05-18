@@ -1,18 +1,18 @@
 package it.polito.tdp.metrodeparis.model;
 
-public class FermateAdiacenti {
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+public class FermateAdiacenti extends DefaultWeightedEdge{
 	private Fermata f1;
 	private Fermata f2;
 	private Linea l1;
+	private double percorrenza;
 	
 	
-	
-	
-	public FermateAdiacenti(Fermata f1, Fermata f2, Linea l1) {
+	public FermateAdiacenti(Fermata f1, Fermata f2) {
 		super();
 		this.f1 = f1;
 		this.f2 = f2;
-		this.l1 = l1;
 	}
 	
 	
@@ -68,7 +68,17 @@ public class FermateAdiacenti {
 
 	@Override
 	public String toString() {
-		return "FermateAdiacenti [f1=" + f1 + ", f2=" + f2 + ", l1=" + l1 + "]";
+		return "linea "+l1.getNome()+"P: "+this.getF1().getNome()+" A: "+ this.getF2().getNome();
+	}
+
+
+	public double getPercorrenza() {
+		return percorrenza;
+	}
+
+
+	public void setPercorrenza(double percorrenza) {
+		this.percorrenza = percorrenza;
 	}
 	
 	

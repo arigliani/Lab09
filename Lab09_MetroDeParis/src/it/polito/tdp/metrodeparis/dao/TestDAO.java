@@ -20,6 +20,8 @@ public class TestDAO {
 		List<FermateAdiacenti> adiacenti= metroDAO.listStazioniAdiacenti();
 		System.out.println(adiacenti);
 		
+		
+		
 	}
 
 }
